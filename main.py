@@ -138,3 +138,78 @@ model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accurac
 model.summary()
 
 model.fit(X_train, y_train, validation_split=0.3, epochs=15, batch_size=32)
+
+# saving the model history
+loss = pd.DataFrame(model.history.history)
+
+# plotting the loss and accuracy
+plt.figure(figsize=(10, 10))
+
+plt.subplot(2, 2, 1)
+plt.plot(loss["loss"], label="Loss")
+plt.plot(loss["val_loss"], label="Validation_loss")
+plt.legend()
+plt.title("Training and Validation Loss")
+
+plt.subplot(2, 2, 2)
+plt.plot(loss['accuracy'], label="Training Accuracy")
+plt.plot(loss['val_accuracy'], label="Validation_ Accuracy ")
+plt.legend()
+plt.title("Training-Validation Accuracy")
+
+predictions = model.predict(X_test)
+y_pred = np.argmax(predictions, axis = 1)
+y_test_new = np.argmax(y_test, axis = 1)
+
+print(classification_report(y_test_new, y_pred))
+
+pd.DataFrame(confusion_matrix(y_test_new, y_pred),
+             columns= ["covid", "normal", "virus"], index = ["covid", "normal", "virus"])
+
+
+base_model = tf.keras.applications.MobileNet(input_shape=[224,224,3], weights = "imagenet", include_top=False)
+
+for layer in base_model.layers:
+  layer.trainable =False
+
+  model = Flatten()(base_model.output)
+  model = Dense(units=1024, activation="rule")(model)
+  model = Dense(units=512, activation="rule")(model)
+  model = Dense(units=256, activation="rule")(model)
+
+  predictions_layer = Dense(units=3, activation="softmax")(model)
+
+
+model = Model(inputs = base_model.input, outputs = predictions_layer)
+model.compile(optimizer='adam',loss='categorical_crossentropy',metrics=['accuracy'])
+model.summary()
+
+
+model.fit(X_train, y_train, validation_split=0.3, epochs=15, batch_size=32)
+
+
+#saving the model history
+loss = pd.DataFrame(model.history.history)
+
+#plotting the loss and accuracy
+plt.figure(figsize=(10,10))
+
+plt.subplot(2,2,1)
+plt.plot(loss["loss"], label ="Loss")
+plt.plot(loss["val_loss"], label = "Validation_loss")
+plt.legend()
+plt.title("Training and Validation Loss")
+
+plt.subplot(2,2,2)
+plt.plot(loss['accuracy'],label = "Training Accuracy")
+plt.plot(loss['val_accuracy'], label ="Validation_ Accuracy ")
+plt.legend()
+plt.title("Training-Validation Accuracy")
+
+predictions = model.predict(X_test)
+
+y_pred = np.argmax(predictions, axis = 1)
+y_test_new = np.argmax(y_test, axis = 1)
+
+pd.DataFrame(confusion_matrix(y_test_new, y_pred), columns= ["covid", "normal", "virus"], index = ["covid", "normal", "virus"])
+
