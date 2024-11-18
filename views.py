@@ -1,31 +1,65 @@
-import tensorflow as tf
-from django.shortcuts import render
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from .forms import ImageUploadForm
-import cv2
+import tkinter as tk
+from tkinter import filedialog
+from tkinter import Label
 import numpy as np
+import cv2
+from PIL import Image, ImageTk
+import tensorflow as tf
 
-# Load the trained model
-model = tf.keras.models.load_model('./covid_detection_model.h5')
+# Load the saved model
+model = tf.keras.models.load_model("Covid_X_Ray_Predector.h5")
+class_names = ["covid", "normal", "virus"]  # Update to match your actual class names
 
-def preprocess_image(image):
-    image = cv2.imdecode(np.fromstring(image.read(), np.uint8), cv2.IMREAD_COLOR)
-    image = cv2.resize(image, (224, 224))
-    image = image / 255.0
-    return image
 
-@csrf_exempt
-def predict_image(request):
-    if request.method == 'POST':
-        form = ImageUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            image = preprocess_image(request.FILES['image'])
-            image = np.expand_dims(image, axis=0)
-            prediction = model.predict(image)
-            label = np.argmax(prediction, axis=1)[0]
-            labels = ['COVID', 'Normal', 'Virus']
-            return JsonResponse({'prediction': labels[label]})
+def preprocess_image(image_path, target_size=(224, 224)):
+    image = cv2.imread(image_path)
+    if image is not None:
+        image = cv2.resize(image, target_size)  # Resize image to target size
+        image = image / 255.0  # Normalize to match training scale
+        return np.expand_dims(image, axis=0)  # Add batch dimension
     else:
-        form = ImageUploadForm()
-    return render(request, 'myapp/upload.html', {'form': form})
+        raise ValueError(f"Could not read image from path: {image_path}")
+
+
+def predict_image(image_path):
+    preprocessed_image = preprocess_image(image_path)
+    prediction = model.predict(preprocessed_image)
+    predicted_class = class_names[np.argmax(prediction)]
+    return predicted_class
+
+
+def upload_image():
+    file_path = filedialog.askopenfilename()
+    if file_path:
+        # Load and display the image
+        image = Image.open(file_path)
+        image = image.resize((224, 224))
+        img_tk = ImageTk.PhotoImage(image)
+
+        # Update image display
+        img_label.configure(image=img_tk)
+        img_label.image = img_tk
+
+        # Make prediction
+        result = predict_image(file_path)
+        result_label.config(text=f"Prediction: {result}")
+
+
+# Set up the GUI
+root = tk.Tk()
+root.title("COVID-19 Classification")
+root.geometry("400x400")
+
+# Image display label
+img_label = Label(root)
+img_label.pack()
+
+# Prediction result label
+result_label = Label(root, text="Upload an image to predict", font=("Arial", 14))
+result_label.pack(pady=10)
+
+# Upload button
+upload_button = tk.Button(root, text="Upload Image", command=upload_image)
+upload_button.pack(pady=20)
+
+root.mainloop()
