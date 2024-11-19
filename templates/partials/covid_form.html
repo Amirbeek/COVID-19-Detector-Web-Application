@@ -1,0 +1,23 @@
+<div class="hero-v1">
+    <div class="container">
+        <h1>Upload X-Ray Image</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            <div>
+                {{ form.image.label }}
+                {{ form.image() }}
+            </div>
+            <div>
+                {{ form.submit() }}
+            </div>
+        </form>
+
+        {% if message %}
+            <p>{{ message }}</p>
+        {% endif %}
+
+        {% if result %}
+            <h2>Prediction Result: {{ result }}</h2>
+        {% endif %}
+    </div>
+</div>
