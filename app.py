@@ -8,7 +8,7 @@ import cv2
 from PIL import Image
 import numpy as np
 from ImageForm import ImageForm as IF
-from tflite_predictor import load_model  # Ensure load_model handles tflite model loading
+from tflite_predictor import load_model
 
 app = Flask(__name__, static_folder='templates/static')
 app.config['SECRET_KEY'] = 'covid19predictor'
