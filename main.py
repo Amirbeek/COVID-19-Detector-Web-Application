@@ -139,7 +139,7 @@ model.summary()
 
 model.fit(X_train, y_train, validation_split=0.3, epochs=15, batch_size=32)
 
-# saving the model history
+# saving the models history
 loss = pd.DataFrame(model.history.history)
 
 # plotting the loss and accuracy
@@ -188,7 +188,7 @@ model.summary()
 model.fit(X_train, y_train, validation_split=0.3, epochs=15, batch_size=32)
 
 
-#saving the model history
+#saving the models history
 loss = pd.DataFrame(model.history.history)
 
 #plotting the loss and accuracy

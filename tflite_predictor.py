@@ -9,13 +9,13 @@ from ImageForm import ImageForm as IF
 # Initialize Flask app
 app = Flask(__name__, static_folder='templates/static')
 
-# Load the TFLite model
+# Load the TFLite models
 def load_model(model_path):
     interpreter = tf.lite.Interpreter(model_path=model_path)
     interpreter.allocate_tensors()
     return interpreter
 
-# Perform inference on the model
+# Perform inference on the models
 def predict(interpreter, input_data):
     # Get input and output details
     input_details = interpreter.get_input_details()
@@ -37,7 +37,7 @@ app.config['SECRET_KEY'] = 'covid19predictor'
 app.config['UPLOAD_FOLDER'] = 'static/uploads'  # Path to store uploaded files
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Max file size 16 MB
 
-# Load the TFLite model
+# Load the TFLite models
 model_path = './models/Covid_X_Ray_Predictor.tflite'
 interpreter = load_model(model_path)
 
@@ -58,13 +58,13 @@ def covid_checker():
         file.save(file_path)
 
         image = Image.open(file_path)
-        image = image.resize((224, 224))  # Resize to the expected model input size (adjust as needed)
+        image = image.resize((224, 224))  # Resize to the expected models input size (adjust as needed)
         input_data = np.array(image).astype(np.float32)
 
-        # If the model expects normalization (e.g., pixel values between 0 and 1)
+        # If the models expects normalization (e.g., pixel values between 0 and 1)
         input_data /= 255.0  # Normalize the input image
 
-        # Perform prediction using the TFLite model
+        # Perform prediction using the TFLite models
         prediction = predict(interpreter, input_data)
 
         # Interpret the prediction result
