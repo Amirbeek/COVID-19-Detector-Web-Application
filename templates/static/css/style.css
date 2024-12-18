@@ -1,7 +1,26 @@
 /* Base */
 html {
   overflow-x: hidden; }
-
+.hop{
+  border: 1px solid gray!important;
+  width: 150px;
+  height: 100%;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+.hop input{
+  position: relative;
+  height: 100%;
+  cursor: pointer;
+}
+#scene{
+        width: 100%;
+        height: 60vh;
+    }
+.hop:hover{
+  box-shadow:1px 1px 1px 1px #1d2124;
+}
 body {
   line-height: 1.7;
   color: gray;

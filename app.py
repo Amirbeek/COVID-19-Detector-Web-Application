@@ -22,23 +22,19 @@ def covid():
     form = IF()
     message = ''
     result = None
-    virus = None
     if form.validate_on_submit():
         file = form.image.data
         file_bytes = file.read()
 
-        # Load the model and class indices
         interpreter = tf.lite.Interpreter(model_path='./models/Covid_X_Ray_Predictor2.tflite')
         interpreter.allocate_tensors()
-        class_indices = joblib.load('class_indices.joblib')  # Load updated class indices
+        class_indices = joblib.load('class_indices.joblib')
         print(f"Loaded class indices: {class_indices}")
 
-        # Decode and preprocess the image
         covid_image = cv2.imdecode(np.frombuffer(file_bytes, np.uint8), cv2.IMREAD_COLOR)
         covid_image = cv2.resize(covid_image, (224, 224)) / 255.0
         covid_image = np.expand_dims(covid_image, axis=0).astype(np.float32)
 
-        # Perform prediction
         input_details = interpreter.get_input_details()[0]
         output_details = interpreter.get_output_details()[0]
 
@@ -49,9 +45,8 @@ def covid():
         predicted_label = np.argmax(prediction)
         print(f"Prediction: {prediction}")
         print(f"Predicted Label: {predicted_label}")
-        virus = predicted_label
-        #nt(virus)
-
+        prediction_percentages = (prediction[0] * 100).round(2)
+        print(prediction_percentages)
         matching_classes = [key for key, value in class_indices.items() if value == predicted_label]
         if matching_classes:
             predicted_class = matching_classes[0]

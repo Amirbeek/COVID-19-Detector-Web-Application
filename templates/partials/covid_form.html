@@ -1,9 +1,11 @@
 <div class="hero-v1">
     <div class="container">
-        <h1>Upload X-Ray Image</h1>
+        <div class="row">
+            <div class="col-md-6 col-sm-12 ">
+                <h1>Upload X-Ray Image</h1>
         <form method="POST" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
-            <div>
+            <div class="hop">
                 {{ form.image.label }}
                 {{ form.image() }}
             </div>
@@ -16,8 +18,183 @@
             <p>{{ message }}</p>
         {% endif %}
 
-        {% if result %}
-            <h2>Prediction Result: {{ result }}</h2>
-        {% endif %}
+
+            </div>
+                <div class="col-md-6  text-center">
+                      {% if result %}
+                           <h2>{{ result }}</h2>
+                    {% endif %}
+                <canvas id="scene" ></canvas>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+
+// Get the canvas element from the DOM
+const canvas = document.querySelector('#scene');
+canvas.width = canvas.clientWidth;
+canvas.height = canvas.clientHeight;
+// Store the 2D context
+const ctx = canvas.getContext('2d');
+
+if (window.devicePixelRatio > 1) {
+  canvas.width = canvas.clientWidth * 2;
+  canvas.height = canvas.clientHeight * 2;
+  ctx.scale(2, 2);
+}
+
+/* ====================== */
+/* ====== VARIABLES ===== */
+/* ====================== */
+let width = canvas.clientWidth; // Width of the canvas
+let height = canvas.clientHeight; // Height of the canvas
+let rotation = 0; // Rotation of the globe
+let dots = []; // Every dot in an array
+
+/* ====================== */
+/* ====== CONSTANTS ===== */
+/* ====================== */
+const DOTS_AMOUNT = 1000; // Amount of dots on the screen
+const DOT_RADIUS = 4; // Radius of the dots
+let GLOBE_RADIUS = width * 0.7; // Radius of the globe
+let GLOBE_CENTER_Z = -GLOBE_RADIUS; // Z value of the globe center
+let PROJECTION_CENTER_X = width / 2; // X center of the canvas HTML
+let PROJECTION_CENTER_Y = height / 2; // Y center of the canvas HTML
+let FIELD_OF_VIEW = width * 0.8;
+
+// Assuming 'result' comes from your Flask template and indicates if it's virus or covid
+const result = "{{ result }}".toLowerCase().split(' ')[1]; // Make sure to pass result from Flask context
+console.log(result)
+class Dot {
+  constructor(x, y, z) {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.color = 'white';
+    this.xProject = 0;
+    this.yProject = 0;
+    this.sizeProjection = 0;
+    this.green = '#a8df65';
+
+  }
+
+  project(sin, cos) {
+    const rotX = cos * this.x + sin * (this.z - GLOBE_CENTER_Z);
+    const rotZ = -sin * this.x + cos * (this.z - GLOBE_CENTER_Z) + GLOBE_CENTER_Z;
+    this.sizeProjection = FIELD_OF_VIEW / (FIELD_OF_VIEW - rotZ);
+    this.xProject = (rotX * this.sizeProjection) + PROJECTION_CENTER_X;
+    this.yProject = (this.y * this.sizeProjection) + PROJECTION_CENTER_Y;
+  }
+
+  draw(sin, cos) {
+    this.project(sin, cos);
+    ctx.beginPath();
+    ctx.arc(this.xProject, this.yProject, DOT_RADIUS * this.sizeProjection, 0, Math.PI * 2);
+    ctx.closePath();
+    ctx.fillStyle = this.color;
+    ctx.fill();
+  }
+}
+
+function createDots() {
+  dots.length = 0;
+
+  for (let i = 0; i < DOTS_AMOUNT; i++) {
+    const theta = Math.random() * 2 * Math.PI;
+    const phi = Math.acos((Math.random() * 2) - 1);
+
+    const x = GLOBE_RADIUS * Math.sin(phi) * Math.cos(theta);
+    const y = GLOBE_RADIUS * Math.sin(phi) * Math.sin(theta);
+    const z = (GLOBE_RADIUS * Math.cos(phi)) + GLOBE_CENTER_Z;
+
+    const dot = new Dot(x, y, z);
+
+    if (result === "virus") {
+      const rand = Math.random();
+      if (rand < 0.5) {
+        dot.color = 'red'; // Virus
+      } else {
+        dot.color = this.green; // Healthy
+      }
+    } else if (result === "covid") {
+      // For 'covid' result: Mix green and red (Healthy and Virus)
+      const rand = Math.random();
+      if (rand < 0.90) {
+        dot.color = 'red'; // Healthy
+      } else if (rand < 0.05) {
+        dot.color = this.green; // Virus
+      }else {
+        dot.color = `hsl(${Math.random() * 360}, 70%, 80%)`; // Beauty color
+      }
+    } else if (result === "normal") {
+      const rand = Math.random();
+      if (rand < 0.01) {
+        dot.color = 'red'; // COVID-positive
+      } else if (rand < 0.9) {
+        dot.color = this.green; // Healthy
+      } else {
+        dot.color = `hsl(${Math.random() * 360}, 70%, 80%)`; // Beauty color
+      }
+    }else{
+      const rand = Math.random();
+      if (rand < 0.50) {
+        dot.color = 'red'; // COVID-positive
+      } else if (rand < 0.25) {
+        dot.color = this.green; // Healthy
+      } else {
+        dot.color = `hsl(${Math.random() * 360}, 70%, 80%)`; // Beauty color
+      }
+    }
+
+    dots.push(dot);
+  }
+}
+
+function render(a) {
+  ctx.clearRect(0, 0, width, height);
+  rotation = a * 0.0004;
+
+  const sineRotation = Math.sin(rotation);
+  const cosineRotation = Math.cos(rotation);
+
+  for (let i = 0; i < dots.length; i++) {
+    dots[i].draw(sineRotation, cosineRotation);
+  }
+
+  window.requestAnimationFrame(render);
+}
+
+function afterResize() {
+  width = canvas.offsetWidth;
+  height = canvas.offsetHeight;
+  if (window.devicePixelRatio > 1) {
+    canvas.width = canvas.clientWidth * 2;
+    canvas.height = canvas.clientHeight * 2;
+    ctx.scale(2, 2);
+  } else {
+    canvas.width = width;
+    canvas.height = height;
+  }
+  GLOBE_RADIUS = width * 0.7;
+  GLOBE_CENTER_Z = -GLOBE_RADIUS;
+  PROJECTION_CENTER_X = width / 2;
+  PROJECTION_CENTER_Y = height / 2;
+  FIELD_OF_VIEW = width * 0.8;
+
+  createDots();
+}
+
+let resizeTimeout;
+function onResize() {
+  resizeTimeout = window.clearTimeout(resizeTimeout);
+  resizeTimeout = window.setTimeout(afterResize, 500);
+}
+window.addEventListener('resize', onResize);
+
+createDots();
+window.requestAnimationFrame(render);
+
+</script>
+
