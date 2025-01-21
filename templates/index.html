@@ -1,13 +1,54 @@
-{% extends "base.html" %}
+{% extends "layouts/layout.html" %}
 
-{% block title %}Home{% endblock %}
-
+{% block title %}Home Page{% endblock %}
 
 {% block content %}
-    {% include 'partials/main.html' %}
-    {% include 'partials/statics.html' %}
-    {% include 'partials/AboutCovid.html' %}
-{% endblock %}
-{% block footer %}
-    {% include 'partials/footer.html' %}
+<div class="relative mx-auto h-[100vh] overflow-hidden">
+    <div class="container ">
+            <div class=" mx-auto px-7 flex justify-left items-center h-screen">
+                 <div>
+                    <div class="my-10">
+                        <img src="{{ url_for('static', filename='images/favicon.ico') }}" class="h-14 w-14 mb-3" alt="Descriptive Alt Text">
+                    </div>
+                    <h1 id="animated-text"  class="text-6xl font-bold Handjet">
+                        Solid and gradient colour palettes
+                    </h1>
+                    <h6 class="text-3xl my-5 Mynerge">
+                        Colour inspiration for your next design project.
+                    </h6>
+                     <button id="advanced-button" class="relative flex items-center px-6 py-3 overflow-hidden font-medium transition-all bg-[#B388EB] rounded-md group">
+            <span
+                class="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-[#8059D9] rounded group-hover:-mr-4 group-hover:-mt-4"
+            >
+                <span
+                    class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"
+                ></span>
+            </span>
+            <span
+                class="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-[#8059D9] rounded group-hover:-ml-4 group-hover:-mb-4"
+            >
+                <span
+                    class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"
+                ></span>
+            </span>
+            <span
+                class="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-[#A171D1] rounded-md group-hover:translate-x-0"
+            ></span>
+            <span
+                class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white"
+            >
+                Discover Colors 🌈
+            </span>
+        </button>
+                 </div>
+            </div>
+        <div class=" h-screen">
+    </div>
+          <img class="absolute w-full left-1/4 top-1/2 transform -translate-y-1/2 z-[-1]"
+               src="{{ url_for('static', filename='images/pallets.png') }}">
+</div>
+    <img class="sgf"
+         src="{{ url_for('static', filename='images/footer.png') }}">
+</div>
+
 {% endblock %}
