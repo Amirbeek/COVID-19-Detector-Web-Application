@@ -3,52 +3,41 @@
 {% block title %}Home Page{% endblock %}
 
 {% block content %}
-<div class="relative mx-auto h-[100vh] overflow-hidden">
-    <div class="container ">
-            <div class=" mx-auto px-7 flex justify-left items-center h-screen">
-                 <div>
-                    <div class="my-10">
-                        <img src="{{ url_for('static', filename='images/favicon.ico') }}" class="h-14 w-14 mb-3" alt="Descriptive Alt Text">
-                    </div>
-                    <h1 id="animated-text"  class="text-6xl font-bold Handjet">
-                        Solid and gradient colour palettes
-                    </h1>
-                    <h6 class="text-3xl my-5 Mynerge">
-                        Colour inspiration for your next design project.
-                    </h6>
-                     <button id="advanced-button" class="relative flex items-center px-6 py-3 overflow-hidden font-medium transition-all bg-[#B388EB] rounded-md group">
-            <span
-                class="absolute top-0 right-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-[#8059D9] rounded group-hover:-mr-4 group-hover:-mt-4"
-            >
-                <span
-                    class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"
-                ></span>
-            </span>
-            <span
-                class="absolute bottom-0 rotate-180 left-0 inline-block w-4 h-4 transition-all duration-500 ease-in-out bg-[#8059D9] rounded group-hover:-ml-4 group-hover:-mb-4"
-            >
-                <span
-                    class="absolute top-0 right-0 w-5 h-5 rotate-45 translate-x-1/2 -translate-y-1/2 bg-white"
-                ></span>
-            </span>
-            <span
-                class="absolute bottom-0 left-0 w-full h-full transition-all duration-500 ease-in-out delay-200 -translate-x-full bg-[#A171D1] rounded-md group-hover:translate-x-0"
-            ></span>
-            <span
-                class="relative w-full text-left text-white transition-colors duration-200 ease-in-out group-hover:text-white"
-            >
-                Discover Colors 🌈
-            </span>
-        </button>
-                 </div>
-            </div>
-        <div class=" h-screen">
-    </div>
-          <img class="absolute w-full left-1/4 top-1/2 transform -translate-y-1/2 z-[-1]"
-               src="{{ url_for('static', filename='images/pallets.png') }}">
-</div>
-    <img class="sgf"
-         src="{{ url_for('static', filename='images/footer.png') }}">
-</div>
+<div class="relative  min-h-screen overflow-hidden background_img">
+  <div class="container mx-auto">
+    <div class="flex flex-col lg:flex-row justify-center lg:justify-start items-center h-screen">
+      <div class="lg:text-left">
+        <div class="">
+          <img
+            src="{{ url_for('static', filename='images/1.png') }}"
+            class="h-24 w-24 mx-auto lg:mx-0 mb-3"
+            alt="Descriptive Alt Text"
+          >
+        </div>
+        <h1 id="animated-text" class="text-4xl lg:text-5xl font-bold leading-tight text-white">
+            Detect Medical COVID-19 Detection from Chest X-rays
+        </h1>
+        <h6 class="text-lg lg:text-1xl my-3 text-white ">
+            Reliable and fast analysis using advanced AI technology
+        </h6>
 
+        <a
+          id="advanced-button"
+          class="group relative inline-block focus:outline-none focus:ring mt-4"
+          href="#"
+        >
+          <span
+            class="absolute inset-0 translate-x-1.5 translate-y-1.5 bg-orange-500 transition-transform group-hover:translate-x-0 group-hover:translate-y-0 group-hover:bg-orange-600"
+          ></span>
+          <span
+            class="relative inline-block border-2 border-current px-8 py-3 text-sm font-bold uppercase tracking-widest text-white group-active:text-opacity-75"
+          >
+            Detect Me
+          </span>
+        </a>
+      </div>
+    </div>
+    <!-- Footer Image -->
+  </div>
+</div>
 {% endblock %}

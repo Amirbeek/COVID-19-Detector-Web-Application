@@ -1,4 +1,4 @@
-<div class="col-span-4">
+<div class="col-span-4" >
     <div class="w-full p-6 bg-white rounded-lg shadow-lg">
         <h1 class="text-xl font-bold text-gray-800 text-center mb-4">
             Upload Your Images
@@ -18,66 +18,56 @@
     </div>
 </div>
 
-<div
-    class=" p-10 bg-[#FADCA2] col-span-7 rounded-lg shadow-lg rounded-t-lg relative"
-    id="sample-images-container"
->
-    <h2 class=" font-normal text-gray-800 mb-10 text-6xl">
-        Looking for inspiration? 🌟
-    </h2>
-    <p class="text-gray-600  my-10 text-2xl">
-         Try out one of these sample images to get started.
-    </p>
-    <div class="swiper">
-    <div class="swiper-wrapper">
-        <div class="swiper-slide border-double border-4 rounded-lg">
-            <img
-                    src="{{ url_for('static', filename='images/frame.png') }}"
-                    alt="Sample 1"
-                    class=" h-52 cursor-pointer w-full rounded-lg"
-                    onclick="loadSampleImage('{{ url_for('static', filename='images/frame.png') }}')"
-             />
-        </div>
-        <div class="swiper-slide border-double border-4 rounded-lg">
-            <img src="{{ url_for('static', filename='images/frame2.png') }}"
-                 alt="Sample 2"
-                 class="rounded-lg cursor-pointer h-52 w-full rounded-lg"
-                 onclick="loadSampleImage('{{ url_for('static', filename='images/frame2.png') }}')"
-            />
-        </div>
-        <div class="swiper-slide border-double border-4 rounded-lg">
-            <img
-                    src="{{ url_for('static', filename='images/frame3.jpg') }}"
-                    alt="Sample 3"
-                    class="rounded-lg  cursor-pointer h-52 w-full rounded-lg"
-                    onclick="loadSampleImage('{{ url_for('static', filename='images/frame3.jpg') }}')"
+{% if prediction %}
+    <div class="text-center my-10">
+        <h2 class="font-bold text-xl text-gray-800">Prediction Result:</h2>
+        <p class="text-gray-500 text-xl">Your image has been analyzed. Check the results below.</p>
+        <div>{{ prediction }}</div>
+    </div>
+{% else %}
 
-            />
+    <!-- If no prediction, show the sample image container for users to upload and analyze images -->
+    <div class="p-10 bg-[#FADCA2] col-span-7 rounded-lg shadow-lg rounded-t-lg relative" id="sample-images-container">
+        <h2 class="font-normal text-gray-800 mb-10 text-4xl">
+            Explore X-ray Samples 🌟
+        </h2>
+        <p class="text-gray-600 my-10 text-2xl">
+            Try out one of these sample images to get started with your COVID-19 detection.
+        </p>
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                <!-- Sample Images -->
+                <div class="swiper-slide border-double border-4 rounded-lg text-center">
+                    <img src="{{ url_for('static', filename='images/X_Ray_Covid.png') }}"
+                         alt="Sample 1" class="h-52 cursor-pointer w-full rounded-lg"
+                         onclick="loadSampleImage('{{ url_for('static', filename='images/X_Ray_Covid.png') }}')" />
+                    <span>COVID SAMPLE</span>
+                </div>
+                <div class="swiper-slide border-double border-4 rounded-lg text-center">
+                    <img src="{{ url_for('static', filename='images/X_Ray_Normal.png') }}"
+                         alt="Sample 2" class="rounded-lg cursor-pointer h-52 w-full"
+                         onclick="loadSampleImage('{{ url_for('static', filename='images/X_Ray_Normal.png') }}')" />
+                    <span>NORMAL SAMPLE</span>
+                </div>
+                <div class="swiper-slide border-double border-4 rounded-lg text-center">
+                    <img src="{{ url_for('static', filename='images/X_Ray_Virus.png') }}"
+                         alt="Sample 3" class="rounded-lg cursor-pointer h-52 w-full"
+                         onclick="loadSampleImage('{{ url_for('static', filename='images/X_Ray_Virus.png') }}')" />
+                    <span>Virus SAMPLE</span>
+                </div>
+            </div>
         </div>
-        <div class="swiper-slide border-double border-4 rounded-lg">
-            <img
-                    src="{{ url_for('static', filename='images/frame4.jpg') }}"
-                    alt="Sample 4"
-                    class="rounded-lg  cursor-pointer h-52 w-full rounded-lg"
-                    onclick="loadSampleImage('{{ url_for('static', filename='images/frame4.jpg') }}')"
-            />
+        <div class="my-10 grid grid-cols-12">
+            <p class="text-gray-500 text-xl col-span-8">Click on an image to preview it here.</p>
+            <div class="relative col-span-4">
+                <span class="swiper-button-prev p-11 border-solid border-2 cursor-pointer border-slate-400 rounded-full"></span>
+                <span class="swiper-button-next py-11 px-11 border-solid border-2 cursor-pointer border-slate-400 rounded-full"></span>
+            </div>
         </div>
     </div>
-
-</div>
-    <div class="my-10 grid grid-cols-12">
-        <p class="text-gray-500 text-2xl col-span-8">Click on an image to preview it here.</p>
-        <div class="relative col-span-4">
-            <span class="swiper-button-prev  p-11 border-solid border-2 cursor-pointer border-slate-400 rounded-full"></span>
-             <span class="swiper-button-next  py-11 px-11 border-solid border-2 cursor-pointer border-slate-400 rounded-full"></span>
-        </div>
-    </div>
-
-</div>
-<div id="image-preview" class=" sm:max-lg:bg-[#FADCA2] col-span-6">
-</div>
-
+{% endif %}
 <script>
+    // Initialize Swiper for sample images
     const swiper = new Swiper('.swiper', {
         loop: true,
         navigation: {
@@ -91,16 +81,11 @@
 
     function loadSampleImage(url) {
         const fileInput = document.getElementById("file-input");
-        const sampleImagesContainer = document.getElementById("sample-images-container");
+        const preview = document.getElementById("image-preview");
 
         FilePond.find(fileInput).removeFiles();
         FilePond.find(fileInput).addFile(url);
 
-        if (sampleImagesContainer) {
-            sampleImagesContainer.style.display = "none";
-        }
-
-        const preview = document.getElementById("image-preview");
         preview.innerHTML = `<img src="${url}" alt="Selected Image" class="w-full h-auto rounded-lg shadow-lg mt-4" />`;
     }
 
@@ -110,168 +95,17 @@
         FilePondPluginFileValidateSize
     );
 
-    function hexToRgb(hex) {
-        const bigint = parseInt(hex.slice(1), 16);
-        const r = (bigint >> 16) & 255;
-        const g = (bigint >> 8) & 255;
-        const b = bigint & 255;
-        return `rgb(${r}, ${g}, ${b})`;
-    }
-
-    function hexToHsl(hex) {
-        const bigint = parseInt(hex.slice(1), 16);
-        const r = (bigint >> 16) & 255 / 255;
-        const g = (bigint >> 8) & 255 / 255;
-        const b = bigint & 255 / 255;
-
-        const max = Math.max(r, g, b);
-        const min = Math.min(r, g, b);
-        let h, s, l = (max + min) / 2;
-
-        if (max === min) {
-            h = s = 0;
-        } else {
-            const d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-            switch (max) {
-                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
-                case g: h = (b - r) / d + 2; break;
-                case b: h = (r - g) / d + 4; break;
-            }
-            h /= 6;
-        }
-
-        return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
-    }
-
     const pond = FilePond.create(document.querySelector(".filepond"), {
-        server: {
-            url: "/covid",
-            process: {
-                method: "POST",
-                headers: {},
-                withCredentials: false,
-                timeout: 7000,
-                onload: (response) => {
-                    const data = JSON.parse(response);
-                    if (data['dominant_colors']) {
-                        const sampleImagesContainer = document.getElementById("sample-images-container");
-                        if (sampleImagesContainer) {
-                            sampleImagesContainer.style.display = "none";
-                        }
-
-                        const preview = document.getElementById("image-preview");
-                        preview.innerHTML = '<h2 class="text-xl font-bold mb-4">Dominant Colors:</h2>';
-
-                        const formatSelector = document.createElement("select");
-                        formatSelector.classList.add("px-4", "py-2", "rounded", "mb-4");
-
-                        const formats = ["HEX", "RGB", "HSL"];
-                        formats.forEach(format => {
-                            const option = document.createElement("option");
-                            option.value = format;
-                            option.textContent = format;
-                            formatSelector.appendChild(option);
-                        });
-
-                        formatSelector.addEventListener("change", () => {
-                            const selectedFormat = formatSelector.value;
-                            const colorBoxes = colorsContainer.querySelectorAll(".color-box");
-                            colorBoxes.forEach((box) => {
-                                const hexColor = box.dataset.hex;
-                                let displayValue;
-                                switch (selectedFormat) {
-                                    case "RGB":
-                                        displayValue = hexToRgb(hexColor);
-                                        break;
-                                    case "HSL":
-                                        displayValue = hexToHsl(hexColor);
-                                        break;
-                                    default:
-                                        displayValue = hexColor;
-                                }
-                                box.querySelector(".tooltip").textContent = displayValue;
-                            });
-                        });
-
-                        preview.appendChild(formatSelector);
-
-                        const colorsContainer = document.createElement("div");
-                        colorsContainer.classList.add("grid", "grid-cols-5", "gap-4");
-
-                        data['dominant_colors'].forEach((color) => {
-                            const colorBox = document.createElement("div");
-                            colorBox.style.backgroundColor = color;
-                            colorBox.classList.add(
-                                "color-box",
-                                "w-25",
-                                "h-56",
-                                "rounded-lg",
-                                "shadow-md",
-                                "relative",
-                                "group",
-                                "cursor-pointer"
-                            );
-                            colorBox.dataset.hex = color;
-
-                            const tooltip = document.createElement("span");
-                            tooltip.textContent = color;
-                            tooltip.classList.add(
-                                "tooltip",
-                                "absolute",
-                                "bottom-[-20px]",
-                                "left-1/2",
-                                "transform",
-                                "-translate-x-1/2",
-                                "bg-gray-800",
-                                "text-white",
-                                "text-xs",
-                                "rounded",
-                                "px-2",
-                                "py-1",
-                                "opacity-0",
-                                "group-hover:opacity-100",
-                                "transition-opacity",
-                                "duration-300"
-                            );
-
-                            colorBox.addEventListener("click", () => {
-                                const displayedValue = tooltip.textContent;
-                                navigator.clipboard.writeText(displayedValue).then(() => {
-                                    console.log(`Copied: ${displayedValue}`);
-                                    const copiedIcon = document.createElement("div");
-                                    copiedIcon.textContent = "Copied!";
-                                    copiedIcon.style.color = "white";
-                                    copiedIcon.style.fontSize = "12px";
-                                    copiedIcon.style.position = "absolute";
-                                    copiedIcon.style.top = "50%";
-                                    copiedIcon.style.left = "50%";
-                                    copiedIcon.style.transform = "translate(-50%, -50%)";
-                                    colorBox.appendChild(copiedIcon);
-
-                                    gsap.to(copiedIcon, {
-                                        opacity: 0,
-                                        y: -20,
-                                        duration: 1.5,
-                                        onComplete: () => {
-                                            copiedIcon.remove();
-                                        },
-                                    });
-                                });
-                            });
-
-                            colorBox.appendChild(tooltip);
-                            colorsContainer.appendChild(colorBox);
-                        });
-
-                        preview.appendChild(colorsContainer);
-                    }
-                },
-                onerror: (error) => {
-                    console.error("Upload error:", error);
-                },
+        server: "/covid",
+        process: {
+            method: "POST",
+            headers: {},
+            withCredentials: false,
+            timeout: 7000,
+            onload: (response) => {
+                console.log('Upload Successful:', response);
             },
-            revert: null,
+            onerror: (error) => console.error("Upload error:", error),
         },
         acceptedFileTypes: ["image/*"],
         maxFileSize: "10MB",
@@ -280,19 +114,7 @@
     });
 
     pond.on("removefile", () => {
-        const sampleImagesContainer = document.getElementById("sample-images-container");
         const preview = document.getElementById("image-preview");
-
-        if (sampleImagesContainer) {
-            sampleImagesContainer.style.display = "block";
-        }
-
-        preview.innerHTML = '<p class="text-gray-500 text-2xl"></p>';
+        preview.innerHTML = '<p class="text-gray-500 text-2xl">Select an image to preview it here.</p>';
     });
 </script>
-
-
-
-
-
-

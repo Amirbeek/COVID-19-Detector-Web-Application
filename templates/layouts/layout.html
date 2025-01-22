@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Tint 🎯🌟Trove{% endblock %}</title>
-    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <title>{% block title %}Detect Me{% endblock %}</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/1.png') }}" type="image/x-icon">
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/output.css') }}">
@@ -29,16 +29,16 @@
     <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
     <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js"></script>
 </head>
-<body>
+<body class="background_img_2">
     {% block content %}
     {% endblock %}
 </body>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
     const texts = [
-        "Solid and gradient colour palettes 🎨🌈",
-        "Tint 🎯🌟Trove💡✨",
-        "Explore 💥🔥Colorful⚡🎉 Designs 🌟✨",
+        "Detect COVID-19 in seconds 🩺🦠",
+        "Fast and reliable X-ray analysis 🏥📈",
+        "Helping healthcare with AI 🤖👩‍⚕️"
     ];
 
     let index = 0;
@@ -48,10 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
             "#animated-text",
             {
                 text: {
-                    value: "💥🔥🎉✨🎯🌟⚡💡💎", // Scrambled starting text
+                     value: "🩺🦠🏥🤖👩‍⚕️", // Scrambled starting text
                     scrambleText: {
-                        chars: "💥🔥🎉✨🎯🌟⚡💡!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
-                        speed: 0.2, // Scramble speed
+                        chars: "🩺🦠🏥🤖👩‍⚕️!@#$%^&*()ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz",
+                        speed: 0.2,
                     },
                 },
             },

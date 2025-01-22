@@ -1,4 +1,6 @@
 node_modules/
+models/Covid_model.tflite
+models/labels.joblib
 *.pyc
 __pycache__
 tests/

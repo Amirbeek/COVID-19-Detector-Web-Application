@@ -22,3 +22,15 @@
 .swiper-button-prev{
 
 }
+.background_img{
+    background-image: url("../images/Background1.png");
+    width: 100vh;
+    height: 100vh;
+    padding: 0 100px;
+
+    background-size: cover;
+}
+.background_img_2{
+    background-image: url("../images/Background.png");
+    background-size: cover;
+}
