@@ -34,3 +34,16 @@
     background-image: url("../images/Background.png");
     background-size: cover;
 }
+.bar {
+    fill: #6200ea;
+    transition: fill 0.3s;
+}
+
+.bar:hover {
+    fill: #1a237e;
+}
+
+text {
+    color: #d7d7ee;
+    font-family: 'Roboto', sans-serif;
+}

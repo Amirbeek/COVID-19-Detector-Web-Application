@@ -1,5 +1,5 @@
 import imageio.v2 as imageio
-from flask import Flask, request, jsonify, render_template, redirect, url_for, flash
+from flask import Flask, request, render_template, flash, jsonify
 import cv2
 import tensorflow as tf
 import joblib
@@ -22,7 +22,8 @@ def covid():
                 image = imageio.imread(image_file)
                 processed_image = preprocess_image(image)
                 prediction = predict(processed_image)
-                # return jsonify({"prediction": prediction})
+                print(prediction)
+                return jsonify({"prediction": prediction})
             except Exception as e:
                 app.logger.error(f"Failed to process or predict the image. Error: {str(e)}")
                 flash(f"Failed to process or predict the image. Error: {str(e)}", 'error')
@@ -54,14 +55,15 @@ def predict(image):
     interpreter.invoke()
     output_details = interpreter.get_output_details()[0]
     logits = interpreter.get_tensor(output_details['index'])
-    probabilities = softmax(logits[0], temperature=1.0)
+    probabilities = softmax(logits[0])
     predictions_percentages = probabilities * 100
     predicted_classes = {class_indices[i]: f"{prob:.2f}%" for i, prob in enumerate(predictions_percentages)}
 
     return predicted_classes
 
-def softmax(x, temperature=1.0):
+def softmax(x):
     """Compute softmax values for each set of scores in x."""
+    temperature = 0.5 + np.random.random() * 0.5
     e_x = np.exp((x - np.max(x)) / temperature)
     return e_x / e_x.sum()
 

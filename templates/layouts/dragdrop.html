@@ -1,4 +1,4 @@
-<div class="col-span-4" >
+<div class="col-span-4">
     <div class="w-full p-6 bg-white rounded-lg shadow-lg">
         <h1 class="text-xl font-bold text-gray-800 text-center mb-4">
             Upload Your Images
@@ -12,62 +12,46 @@
             data-max-file-size="10MB"
             data-max-files="1"
         />
-        <h1 class="text-xl font-bold text-gray-800 text-center mb-4">
-            Upload Your Images
-        </h1>
     </div>
 </div>
 
-{% if prediction %}
-    <div class="text-center my-10">
-        <h2 class="font-bold text-xl text-gray-800">Prediction Result:</h2>
-        <p class="text-gray-500 text-xl">Your image has been analyzed. Check the results below.</p>
-        <div>{{ prediction }}</div>
+<div class="p-10 bg-[#FADCA2] col-span-7 rounded-lg shadow-lg rounded-t-lg relative" id="sample-images-container">
+    <h2 class="font-normal text-gray-800 mb-10 text-4xl">
+        Explore X-ray Samples 🌟
+    </h2>
+    <p class="text-gray-600 my-10 text-2xl">
+        Try out one of these sample images to get started with your COVID-19 detection.
+    </p>
+    <div class="swiper">
+        <div class="swiper-wrapper">
+            <!-- Sample Images -->
+            <div class="swiper-slide border-double border-4 rounded-lg text-center">
+                <img src="{{ url_for('static', filename='images/X_Ray_Covid.png') }}"
+                     alt="Sample 1" class="h-52 cursor-pointer w-full rounded-lg"
+                     onclick="loadSampleImage('{{ url_for('static', filename='images/X_Ray_Covid.png') }}')" />
+                <span>COVID SAMPLE</span>
+            </div>
+            <div class="swiper-slide border-double border-4 rounded-lg text-center">
+                <img src="{{ url_for('static', filename='images/X_Ray_Normal.png') }}"
+                     alt="Sample 2" class="rounded-lg cursor-pointer h-52 w-full"
+                     onclick="loadSampleImage('{{ url_for('static', filename='images/X_Ray_Normal.png') }}')" />
+                <span>NORMAL SAMPLE</span>
+            </div>
+            <div class="swiper-slide border-double border-4 rounded-lg text-center">
+                <img src="{{ url_for('static', filename='images/X_Ray_Virus.png') }}"
+                     alt="Sample 3" class="rounded-lg cursor-pointer h-52 w-full"
+                     onclick="loadSampleImage('{{ url_for('static', filename='images/X_Ray_Virus.png') }}')" />
+                <span>Virus SAMPLE</span>
+            </div>
+        </div>
     </div>
-{% else %}
+</div>
+<div id="image-preview" class="sm:max-lg:bg-[#FADCA2] col-span-6">
+    <!-- D3 Visualization will go here -->
+</div>
 
-    <!-- If no prediction, show the sample image container for users to upload and analyze images -->
-    <div class="p-10 bg-[#FADCA2] col-span-7 rounded-lg shadow-lg rounded-t-lg relative" id="sample-images-container">
-        <h2 class="font-normal text-gray-800 mb-10 text-4xl">
-            Explore X-ray Samples 🌟
-        </h2>
-        <p class="text-gray-600 my-10 text-2xl">
-            Try out one of these sample images to get started with your COVID-19 detection.
-        </p>
-        <div class="swiper">
-            <div class="swiper-wrapper">
-                <!-- Sample Images -->
-                <div class="swiper-slide border-double border-4 rounded-lg text-center">
-                    <img src="{{ url_for('static', filename='images/X_Ray_Covid.png') }}"
-                         alt="Sample 1" class="h-52 cursor-pointer w-full rounded-lg"
-                         onclick="loadSampleImage('{{ url_for('static', filename='images/X_Ray_Covid.png') }}')" />
-                    <span>COVID SAMPLE</span>
-                </div>
-                <div class="swiper-slide border-double border-4 rounded-lg text-center">
-                    <img src="{{ url_for('static', filename='images/X_Ray_Normal.png') }}"
-                         alt="Sample 2" class="rounded-lg cursor-pointer h-52 w-full"
-                         onclick="loadSampleImage('{{ url_for('static', filename='images/X_Ray_Normal.png') }}')" />
-                    <span>NORMAL SAMPLE</span>
-                </div>
-                <div class="swiper-slide border-double border-4 rounded-lg text-center">
-                    <img src="{{ url_for('static', filename='images/X_Ray_Virus.png') }}"
-                         alt="Sample 3" class="rounded-lg cursor-pointer h-52 w-full"
-                         onclick="loadSampleImage('{{ url_for('static', filename='images/X_Ray_Virus.png') }}')" />
-                    <span>Virus SAMPLE</span>
-                </div>
-            </div>
-        </div>
-        <div class="my-10 grid grid-cols-12">
-            <p class="text-gray-500 text-xl col-span-8">Click on an image to preview it here.</p>
-            <div class="relative col-span-4">
-                <span class="swiper-button-prev p-11 border-solid border-2 cursor-pointer border-slate-400 rounded-full"></span>
-                <span class="swiper-button-next py-11 px-11 border-solid border-2 cursor-pointer border-slate-400 rounded-full"></span>
-            </div>
-        </div>
-    </div>
-{% endif %}
+<script src="https://d3js.org/d3.v7.min.js"></script>
 <script>
-    // Initialize Swiper for sample images
     const swiper = new Swiper('.swiper', {
         loop: true,
         navigation: {
@@ -79,16 +63,6 @@
         grabCursor: true,
     });
 
-    function loadSampleImage(url) {
-        const fileInput = document.getElementById("file-input");
-        const preview = document.getElementById("image-preview");
-
-        FilePond.find(fileInput).removeFiles();
-        FilePond.find(fileInput).addFile(url);
-
-        preview.innerHTML = `<img src="${url}" alt="Selected Image" class="w-full h-auto rounded-lg shadow-lg mt-4" />`;
-    }
-
     FilePond.registerPlugin(
         FilePondPluginFileValidateType,
         FilePondPluginImagePreview,
@@ -96,16 +70,22 @@
     );
 
     const pond = FilePond.create(document.querySelector(".filepond"), {
-        server: "/covid",
-        process: {
-            method: "POST",
-            headers: {},
-            withCredentials: false,
-            timeout: 7000,
-            onload: (response) => {
-                console.log('Upload Successful:', response);
+        server: {
+            url: "/covid",
+            process: {
+                method: "POST",
+                headers: {},
+                withCredentials: false,
+                timeout: 7000,
+                onload: (response) => {
+                    const data = JSON.parse(response);
+                    if (data['prediction']) {
+                        document.getElementById("sample-images-container").style.display = "none";
+                        displayPredictionResults(data['prediction']);
+                    }
+                },
+                onerror: (error) => console.error("Upload error:", error)
             },
-            onerror: (error) => console.error("Upload error:", error),
         },
         acceptedFileTypes: ["image/*"],
         maxFileSize: "10MB",
@@ -114,7 +94,87 @@
     });
 
     pond.on("removefile", () => {
+        const sampleImagesContainer = document.getElementById("sample-images-container");
+        sampleImagesContainer.style.display = "block";
         const preview = document.getElementById("image-preview");
-        preview.innerHTML = '<p class="text-gray-500 text-2xl">Select an image to preview it here.</p>';
+        preview.innerHTML = '';
     });
+  function loadSampleImage(url) {
+        const fileInput = document.getElementById("file-input");
+        const sampleImagesContainer = document.getElementById("sample-images-container");
+
+        FilePond.find(fileInput).removeFiles();
+        FilePond.find(fileInput).addFile(url);
+
+        if (sampleImagesContainer) {
+            sampleImagesContainer.style.display = "none";
+        }
+
+        const preview = document.getElementById("image-preview");
+        preview.innerHTML = `<!--<img src="${url}" alt="Selected Image" class="w-full h-auto rounded-lg shadow-lg mt-4" />-->`;
+    }
+// Assuming the D3.js setup from the previous example
+function displayPredictionResults(predictionData) {
+    const data = Object.keys(predictionData).map(key => ({
+        label: key,
+        value: parseFloat(predictionData[key].replace('%', ''))
+    }));
+
+    // Clear previous contents and setup the container
+    const container = d3.select('#image-preview').html('');
+    const svgWidth = 700, svgHeight = 400;
+    const margin = { top: 20, right: 20, bottom: 70, left: 40 };
+    const width = svgWidth - margin.left - margin.right;
+    const height = svgHeight - margin.top - margin.bottom;
+
+    const svg = container.append('svg')
+        .attr('width', svgWidth)
+        .attr('height', svgHeight)
+        .append('g')
+        .attr('transform', `translate(${margin.left}, ${margin.top})`);
+
+    // Setup x scale
+    const x = d3.scaleBand()
+        .range([0, width])
+        .padding(0.1)
+        .domain(data.map(d => d.label));
+
+    // Setup y scale
+    const y = d3.scaleLinear()
+        .domain([0, 100]) // Assuming value cannot exceed 100%
+        .range([height, 0]);
+
+    // Create bars
+    svg.selectAll(".bar")
+        .data(data)
+        .enter().append("rect")
+        .attr("class", "bar")
+        .attr("x", d => x(d.label))
+        .attr("width", x.bandwidth())
+        .attr("y", d => y(d.value))
+        .attr("height", d => height - y(d.value))
+        .attr("fill", "#6200ea");
+
+    // Add x-axis
+    svg.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(x));
+
+    // Add y-axis
+    svg.append("g")
+        .call(d3.axisLeft(y));
+
+    // Add labels on bars
+    svg.selectAll(".label")
+        .data(data)
+        .enter().append("text")
+        .attr("class", "label")
+        .attr("x", d => x(d.label) + x.bandwidth() / 2)
+        .attr("y", d => y(d.value) - 5)
+        .attr("dy", "0.35em")
+        .attr("text-anchor", "middle")
+        .text(d => `${d.value}%`)
+        .attr("fill", "white");
+}
+
 </script>
