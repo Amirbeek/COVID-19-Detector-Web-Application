@@ -1,8 +1,6 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-
 @import url('https://fonts.googleapis.com/css2?family=Mynerve&family=Handjet&display=swap');
 
 .Handjet {
@@ -24,16 +22,14 @@
 }
 .background_img{
     background-image: url("../images/Background1.png");
-    width: 100vh;
-    height: 100vh;
     padding: 0 100px;
-
     background-size: cover;
 }
 .background_img_2{
     background-image: url("../images/Background.png");
     background-size: cover;
 }
+
 .bar {
     fill: #6200ea;
     transition: fill 0.3s;

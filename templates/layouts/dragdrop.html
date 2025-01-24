@@ -24,7 +24,6 @@
     </p>
     <div class="swiper">
         <div class="swiper-wrapper">
-            <!-- Sample Images -->
             <div class="swiper-slide border-double border-4 rounded-lg text-center">
                 <img src="{{ url_for('static', filename='images/X_Ray_Covid.png') }}"
                      alt="Sample 1" class="h-52 cursor-pointer w-full rounded-lg"
@@ -45,9 +44,17 @@
             </div>
         </div>
     </div>
+    <div class="my-10 grid grid-cols-12">
+        <p class="text-gray-500 text-2xl col-span-8">Click on an image to preview it here.</p>
+        <div class="relative col-span-4">
+            <span class="swiper-button-prev  p-11 border-solid border-2 cursor-pointer border-slate-400 rounded-full"></span>
+             <span class="swiper-button-next  py-11 px-11 border-solid border-2 cursor-pointer border-slate-400 rounded-full"></span>
+        </div>
+    </div>
+
 </div>
-<div id="image-preview" class="sm:max-lg:bg-[#FADCA2] col-span-6">
-    <!-- D3 Visualization will go here -->
+
+<div id="image-preview" class="sm:max-lg:bg-[#FADCA2] col-span-7">
 </div>
 
 <script src="https://d3js.org/d3.v7.min.js"></script>
