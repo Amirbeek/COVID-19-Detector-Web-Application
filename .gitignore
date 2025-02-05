@@ -8,3 +8,4 @@ tests/
 *.env
 *.log
 *.md
+.bashrc
