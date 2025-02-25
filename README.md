@@ -1,6 +1,6 @@
 # SafeScan - AI-Powered COVID-19 Detection
 
-![SafeScan Logo](	https://amirbekshomurodov.me/static/855a6e9a3a644df727b9e9024d5aeada/9298b/covid-detector.webp)
+![SafeScan Logo](https://amirbekshomurodov.me/static/855a6e9a3a644df727b9e9024d5aeada/9298b/covid-detector.webp)
 
 ## 📌 Overview  
 SafeScan is an AI-powered web application designed to detect COVID-19 using X-ray images. By leveraging deep learning techniques, it offers **fast, accurate, and accessible** diagnosis, reducing reliance on traditional PCR and antigen tests.
