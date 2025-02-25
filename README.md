@@ -30,5 +30,39 @@ Follow these steps to set up the project locally:
 
 ### 1️⃣ Clone the Repository  
 ```bash
-git clone https://github.com/yourusername/SafeScan.git
+git clone https://github.com/Amirbeek/COVID-19-Detector-Web-Application.git
 cd SafeScan
+```
+
+### 2️⃣ Install Dependencies  
+```bash
+pip install -r requirements.txt
+```
+
+### 3️⃣ Run the Application  
+```bash
+python app.py
+```
+
+The web application will be available at `http://127.0.0.1:5000/`
+
+## 📂 Project Structure  
+```
+SafeScan/
+│── static/            # Static assets (CSS, JS, images)
+│── templates/         # HTML templates
+│── models/           # Trained AI models
+│── app.py            # Flask application
+│── requirements.txt  # Dependencies
+└── README.md         # Project documentation
+```
+
+## 📜 License  
+This project is licensed under the **MIT License**.
+
+## 🤝 Acknowledgements  
+Special thanks to **Brunel University London** and my supervisor **Webio Liu** for their guidance and support throughout this project.
+
+---
+
+🚀 **Contributions are welcome!** Feel free to fork this repository and submit a pull request. Let's make AI-powered diagnostics more accessible! 🌍
