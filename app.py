@@ -4,9 +4,15 @@ import cv2
 import tensorflow as tf
 import joblib
 import numpy as np
+import requests
+import csv
+import os
+
+FORMCARRY_URL = "https://formcarry.com/s/YOUR_FORMCARRY_ID"
 app = Flask(__name__, static_folder='static')
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+CSV_FILE = "feedback_data.csv"
 
 @app.route('/')
 def index():
@@ -37,6 +43,53 @@ def covid():
     print("Final Prediction being sent to template:", prediction)
     return render_template('covid.html', prediction=prediction,)
 
+@app.route('/feedback', methods=['GET', 'POST'])
+def feedback():
+    if request.method == 'POST':
+        try:
+            form_data = {
+                "name": request.form.get("name"),
+                "email": request.form.get("email"),
+                "message": request.form.get("message")
+            }
+            response = requests.post(FORMCARRY_URL, data=form_data)
+            if response.status_code == 200:
+                return jsonify({"success": True, "message": "Feedback submitted successfully!"})
+            else:
+                return jsonify({"success": False, "message": "Failed to submit feedback. Try again later."}), 400
+        except Exception as e:
+            return jsonify({"success": False, "message": f"Error: {str(e)}"}), 500
+
+    return render_template('feedback.html')
+
+@app.route('/questionnaire', methods=['GET', 'POST'])
+def questionnaire():
+    if request.method == 'POST':
+        try:
+            form_data = {
+                "upload_method": request.form.get("upload_method"),
+                "purpose": request.form.get("purpose"),
+                "accuracy": request.form.get("accuracy"),
+                "expectation": request.form.get("expectation"),
+                "features": request.form.getlist("features"),
+                "recommend": request.form.get("recommend"),
+                "comments": request.form.get("comments")
+            }
+            save_feedback_to_csv(form_data)
+            return jsonify({"success": True, "message": "Feedback submitted successfully!"})
+        except Exception as e:
+            return jsonify({"success": False, "message": f"Error: {str(e)}"}), 500
+    return render_template('Questionnaire.html')
+
+def save_feedback_to_csv(data):
+    """Save feedback data to a CSV file."""
+    file_exists = os.path.isfile(CSV_FILE)
+    with open(CSV_FILE, mode='a', newline='', encoding='utf-8') as file:
+        writer = csv.writer(file)
+        if not file_exists:
+            writer.writerow(["Upload Method", "Purpose", "Accuracy", "Expectation", "Features", "Recommend", "Comments"])
+        writer.writerow([data["upload_method"], data["purpose"], data["accuracy"], data["expectation"], ', '.join(data["features"]), data["recommend"], data["comments"]])
+
 def preprocess_image(image):
     """Preprocess the image for models prediction"""
     covid_image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -66,7 +119,6 @@ def softmax(x):
     temperature = 0.5 + np.random.random() * 0.5
     e_x = np.exp((x - np.max(x)) / temperature)
     return e_x / e_x.sum()
-
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,0 +1,122 @@
+{% extends "layouts/layout.html" %}
+
+{% block title %}X-ray Prediction Feedback{% endblock %}
+
+{% block content %}
+
+<div class="container mx-auto p-10  py-10 " style="padding: 50px 100px">
+    <div>
+        <div class="flex justify-left items-center text-white text-2xl">
+                <a href="/" class="hover:text-gray-300 transition ease-in-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                </a>
+                <span class="mx-4 text-white">
+                    /
+                </span>
+                <a href="/covid" class="hover:text-gray-300 transition ease-in-out">
+                    Questionnaire
+                </a>
+                 <div class="w-4/5">
+                  <div class=" text-right">
+                      <div class="text-right">
+                        <button id="openModal" class="hover:text-gray-300 transition ease-in-out">
+                            Policy
+                        </button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+    </div>
+<div class="max-w-3xl mx-auto mt-8 p-6 bg-gray-800 text-white rounded-lg shadow-lg">
+    <h1 class="text-2xl font-semibold mb-6 text-center">X-ray Prediction Feedback</h1>
+    <form id="feedback-form" class="space-y-6">
+
+        <div>
+            <label class="block text-lg font-medium mb-2">1. How did you upload your X-ray image?</label>
+            <select name="upload_method" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500">
+                <option value="direct">Direct file upload</option>
+                <option value="drag">Drag & drop</option>
+                <option value="url">URL link</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium mb-2">2. What was the purpose of uploading your X-ray image?</label>
+            <select name="purpose" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500">
+                <option value="medical">Medical diagnosis</option>
+                <option value="research">Research purposes</option>
+                <option value="education">Educational purposes</option>
+                <option value="other">Other</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium mb-2">3. How would you rate the accuracy of the prediction?</label>
+            <select name="accuracy" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500">
+                <option value="5">⭐⭐⭐⭐⭐ (Excellent)</option>
+                <option value="4">⭐⭐⭐⭐ (Good)</option>
+                <option value="3">⭐⭐⭐ (Average)</option>
+                <option value="2">⭐⭐ (Poor)</option>
+                <option value="1">⭐ (Very Poor)</option>
+            </select>
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium mb-2">4. Did the prediction match your expectations?</label>
+            <div class="space-y-2">
+                <label class="flex items-center gap-2"><input type="radio" name="expectation" value="yes" class="accent-blue-500"> Yes, it was accurate</label>
+                <label class="flex items-center gap-2"><input type="radio" name="expectation" value="somewhat" class="accent-blue-500"> Somewhat accurate</label>
+                <label class="flex items-center gap-2"><input type="radio" name="expectation" value="no" class="accent-blue-500"> No, it was incorrect</label>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium mb-2">5. What additional features would you like to see in the system?</label>
+            <div class="space-y-2">
+                <label class="flex items-center gap-2"><input type="checkbox" name="features" value="explanation" class="accent-blue-500"> AI-powered explanation for predictions</label>
+                <label class="flex items-center gap-2"><input type="checkbox" name="features" value="comparison" class="accent-blue-500"> Comparison with previous X-ray images</label>
+                <label class="flex items-center gap-2"><input type="checkbox" name="features" value="detailed" class="accent-blue-500"> More detailed analysis</label>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium mb-2">6. Would you recommend this tool to others?</label>
+            <div class="space-y-2">
+                <label class="flex items-center gap-2"><input type="radio" name="recommend" value="yes" class="accent-blue-500"> Yes</label>
+                <label class="flex items-center gap-2"><input type="radio" name="recommend" value="no" class="accent-blue-500"> No</label>
+            </div>
+        </div>
+
+        <div>
+            <label class="block text-lg font-medium mb-2">7. Additional Comments:</label>
+            <textarea name="comments" rows="4" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500" placeholder="Enter your feedback..."></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md transition duration-300">Submit Feedback</button>
+    </form>
+</div>
+
+    <script>
+        document.getElementById('feedback-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let formData = new FormData(this);
+            fetch('/questionnaire', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+{% endblock %}
+
+
+
