@@ -100,7 +100,7 @@ def preprocess_image(image):
 
 def predict(image):
     """Predict the class of the image using the preloaded model and return probabilities as percentages."""
-    interpreter = tf.lite.Interpreter(model_path='./models/Covid_model.tflite')
+    interpreter = tf.lite.Interpreter(model_path='./models/Covid_X_Ray_Predictor.tflite')
     interpreter.allocate_tensors()
     class_indices = joblib.load('./models/labels.joblib')
     input_details = interpreter.get_input_details()[0]
